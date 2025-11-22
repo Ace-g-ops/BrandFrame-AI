@@ -15,7 +15,7 @@ class GenerationController extends Controller
         $validated = $request->validate([
 
             'product_image' => 'required|image|mimes:png,jpg,jpeg|max:5120',
-            'shot_type' => 'required|in:lifestyle, hero, falt_lay, context,white_background',
+            'shot_type' => 'required|in:lifestyle,hero,falt_lay,context,white_background',
             'product_description' => 'nullable|string|max:400'
         ]);
 
@@ -87,7 +87,7 @@ public function index(Request $request){
 }
 
 //get a single generated image
-public function show(Request $request, string $id) {
+public function show(Request $request, $id) {
 
     $image = GeneratedImage::where('id', $id)
     ->where('user_id', $request->user()->id)
@@ -101,7 +101,7 @@ public function show(Request $request, string $id) {
 public function destroy(Request $request, $id){
 
     $image = GeneratedImage::where('id', $id)
-    ->Arr::where('user_id', $request->user()->id)
+    ->where('user_id', $request->user()->id)
     ->firstOrFail();
 
     $image->delete();

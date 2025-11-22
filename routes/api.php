@@ -23,11 +23,12 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('upload-product', [ImageController::class, 'uploadProduct'])->name('upload_product');
 
     //Generation Upload Routes
-    Route::post('/gemerate', [GenerationController::class, 'generate'])->name('generate');
+    Route::post('/generate', [GenerationController::class, 'generate']);
     Route::get('/generations', [GenerationController::class, 'index']);
-    Route::get('generation/{id}', [GenerationController::class, 'delete'])->name('destroy');
+    Route::get('/generation/{id}', [GenerationController::class, 'show'])->name('show');
+    Route::delete('/generation/{id}', [GenerationController::class, 'destroy'])->name('dstroy');
 
 });
 
 // test routes
- Route::post('test-bria', [testBriaController::class, 'testGenerate'])->name('test-bria')->auth::sanctum();
+ Route::post('test-bria', [testBriaController::class, 'testGenerate'])->name('test-bria')->middleware('auth::sanctum');

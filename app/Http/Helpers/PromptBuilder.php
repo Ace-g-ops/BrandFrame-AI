@@ -12,20 +12,17 @@ class PromptBuilder {
 
             return "Professional product photography of {$productDescription}";
         }
-
         return sprintf(
-
-            "Professional %s photography of %s. Shot with %s, %s, %s composition . %s mood and atmosphere.",
+            "Professional %s photography of %s. Shot with %s, %s, %s composition. %s mood.",
             $shotConfig['name'],
             $productDescription,
             $shotConfig['camera_angle'],
-            $shotConfig['composition'].
             $shotConfig['lighting'],
+            $shotConfig['composition'],
             $shotConfig['mood']
-
         );
 
-        
+
     
 }
 }
