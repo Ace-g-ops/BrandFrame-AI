@@ -47,7 +47,7 @@ class GenerationController extends Controller
         $briaData = $response->json();
 
         //save to database
-        $geeneratedImage = GeneratedImage::create([
+        $generatedImage = GeneratedImage::create([
 
             'user_id' => $request->user()->id,
             'product_image_path' => $productPath,
@@ -55,6 +55,8 @@ class GenerationController extends Controller
             'structured_prompt' => json_decode($briaData['result']['structured_prompt'], true),
             'generated_image_url' => $briaData['result']['image_url'],
             'shot_type' => $validated['shot_type'],
+            'angle' => $briaData['result']['angle'] ?? 'null',
+            'style' => $briaData['result']['style'] ?? 'default',
             'bria_request_id'=> $briaData['request_id'],
             'metadata' => $briaData
         ]);
@@ -62,7 +64,7 @@ class GenerationController extends Controller
         return response()->json([
 
             'message' => 'Image generated succesfully',
-            'data' => $geeneratedImage,
+            'data' => $generatedImage,
             'image_url' => $briaData['result']['image_url']
         ], 201);
 

@@ -18,8 +18,8 @@ return new class extends Migration
             $table->string('product_image_path'); // Path to the generated product image
             $table->text('user_intent'); // Description of what the user intended "lifestyle photo of a instagram"
             $table->json('structured_prompt'); //the json from Bria API
-            $table->string('style'); // e.g., modern, vintage, minimalist
             $table->string('angle'); // e.g., top-down, side view, close-up
+            $table->string('style')->nullable(); // e.g., modern, rustic, vintage
             $table->string('generated_image_url'); // URL of the generated image from Bria
             $table->string('shot_type'); // e.g., lifestyle, studio, flatlay, context
             $table->string('bria_request_id')->nullable(); // ID returned by Bria API for tracking

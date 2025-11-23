@@ -13,7 +13,6 @@ class GeneratedImage extends Model
         'product_image_path',
         'user_intent',
         'structured_prompt',
-        'style',
         'angle',
         'generated_image_url',
         'shot_type',
