@@ -11,12 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('brand_presets', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->string('name'); // Name of the brand preset, "Sunny Apparel", "TechGear"
-            $table->json('structured_prompt'); // JSON structure for the brand preset to reuse
-            $table->text('description')->nullable(); // Optional description of the brand preset
+        // Update the shot_type enum to include new values
+        Schema::table('brand_presets', function (Blueprint $table) {
             $table->enum('shot_type', [
                 'lifestyle', 
                 'hero', 
@@ -28,8 +24,7 @@ return new class extends Migration
                 'instagram_post',
                 'square',
                 'instagram_story'
-                ]); // Type of shot for the preset
-            $table->timestamps();
+            ])->change();
         });
     }
 
@@ -38,6 +33,15 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('brand_presets');
+        // Revert the shot_type enum to its original values
+        Schema::table('brand_presets', function (Blueprint $table) {
+            $table->enum('shot_type', [
+                'lifestyle', 
+                'hero', 
+                'flat_lay', 
+                'context', 
+                'white_background'
+            ])->change();
+        });
     }
 };

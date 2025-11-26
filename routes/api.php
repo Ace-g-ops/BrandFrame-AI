@@ -43,7 +43,7 @@ Route::middleware('auth:sanctum')->group(function() {
 });
 
 // Apply To PreSET To Generate Route
-Route::post('/apply-preset', [BrandPresetController::class, 'applyPreset']);
+Route::post('/presets/{id}/apply', [BrandPresetController::class, 'applyPreset'])->middleware('auth:sanctum');
 
 // test routes
  Route::post('test-bria', [testBriaController::class, 'testGenerate'])->name('test-bria')->middleware('auth::sanctum');

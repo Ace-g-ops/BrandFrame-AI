@@ -12,6 +12,7 @@ class BrandPreset extends Model
         'name',
         'structured_prompt',
         'description',
+        'shot_type',
     ];
 
     protected $casts = [
