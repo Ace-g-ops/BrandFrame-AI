@@ -52,7 +52,7 @@
             'mood' => 'natural, environmnetal, storytelling'
         ],
 
-        'potrait' => [
+        'portrait' => [
 
              'name' => 'Portrait',
             'description' => 'Focused product close-up',

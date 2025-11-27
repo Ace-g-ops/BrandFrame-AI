@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\BatchProcessingController;
 use App\Http\Controllers\BrandPresetController;
 use App\Http\Controllers\GenerationController;
 use App\Http\Controllers\ImageController;
@@ -41,6 +42,9 @@ Route::middleware('auth:sanctum')->group(function() {
     Route::delete('/presets/{id}', [BrandPresetController::class, 'destroy']);
 
 });
+
+// brand-processing routes
+Route::post('/batch-generate', [BatchProcessingController::class, 'batchGenerate'])->middleware('auth:sanctum');
 
 // Apply To PreSET To Generate Route
 Route::post('/presets/{id}/apply', [BrandPresetController::class, 'applyPreset'])->middleware('auth:sanctum');

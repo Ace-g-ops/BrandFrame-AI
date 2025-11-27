@@ -19,7 +19,7 @@ class BrandPresetController extends Controller
 
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'shot_type' => 'required|in:lifestyle,hero,flat_lay,context,white_background,potrait,landscape,instagram_post,square,instagram_story',
+            'shot_type' => 'required|in:lifestyle,hero,flat_lay,context,white_background,portrait,landscape,instagram_post,square,instagram_story',
             'structured_prompt' => 'required|array'
          ]);
 
@@ -53,7 +53,7 @@ class BrandPresetController extends Controller
 
         return response()->json([
             
-            'message' => 'All Presets gottn succesfully',
+            'message' => 'All Presets gotten succesfully',
             'data' => $preset
         ], 200);
     }
@@ -137,8 +137,7 @@ class BrandPresetController extends Controller
     $apiKey = env('BRIA_API_KEY');
 
     try {
-        $response = Http::withoutVerifying()
-            ->withHeaders([
+        $response = Http::withHeaders([
                 'api_token' => $apiKey,
                 'Content-Type' => 'application/json',
             ])->post('https://engine.prod.bria-api.com/v2/image/generate', [
