@@ -14,9 +14,8 @@ class BatchProcessingController extends Controller
         // Validate the request
         $validated = $request->validate([
             'preset_id' => 'required|exists:brand_presets,id',
-            'product_images' => 'required|image|mimes:jpeg,png,jpg|min:1,max:10',
-            'product_images.*' => 'image|mimes:jpeg,png,jpg|max:5120',
-            'product_description' => 'nullable|string|max:255'
+            'product_images.*' => 'required|image|mimes:jpeg,png,jpg|max:5120',  // 
+            'product_descriptions' => 'nullable|array'
         ]);
 
         //get presets
@@ -40,13 +39,12 @@ class BatchProcessingController extends Controller
                 $description = $validated['product_descriptions'][$index] ?? 'product';
 
                 // Call Bria API
-
+                $newPrompt = $this->buildPromptFromPreset($preset, $description);
                 $response = HTTP::withHeaders([
-
                     'api_token' => $apiKey,
                     'Content_type' => 'application/json'
                 ])->post('https://engine.prod.bria-api.com/v2/image/generate', [
-                    'prompt' => $preset->structured_prompt,
+                    'prompt' => $newPrompt,
                     'num_results' => 1,
                     'sync' => true
                 ]);
@@ -70,13 +68,13 @@ class BatchProcessingController extends Controller
                     'brand_preset_id' => $preset->id,
                     'product_image_path' => $productPath,
                     'user_intent' => $description,
-                    'structured_prompt' => json_encode($briaData['result']['structured_prompt'], true),
+                    'structured_prompt' => $briaData['result']['structured_prompt'], 
                     'generated_image_url' => $briaData['result']['image_url'],
                     'shot_type' => $preset->shot_type,
                     'style' => $preset->structured_prompt['style'] ?? 'default',
                     'angle' => $preset->structured_prompt['angle'] ?? 'default',
                     'bria_request_id' => $briaData['request_id'],
-                    'metadat' => $briaData
+                    'metadata' => $briaData
                 ]);
 
                 $results[] = [
@@ -105,4 +103,29 @@ class BatchProcessingController extends Controller
         ], 201);
 
     }
+
+        // Helper method to build prompt from preset
+    private function buildPromptFromPreset($preset, $productDescription)
+    {
+        // Get shot type config
+        $shotConfig = config("shot_types.{$preset->shot_type}");
+        
+        if (!$shotConfig) {
+            return "Professional product photography of {$productDescription}";
+        }
+
+        // Build prompt using preset's shot type settings + new product
+        return sprintf(
+            "Professional %s photography of %s. Shot with %s, %s, %s composition. %s mood and atmosphere.",
+            $shotConfig['name'],
+            $productDescription,
+            $shotConfig['camera_angle'],
+            $shotConfig['lighting'],
+            $shotConfig['composition'],
+            $shotConfig['mood']
+        );
+    }
+
+
+    
 }
