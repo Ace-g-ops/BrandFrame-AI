@@ -47,7 +47,7 @@ class BatchProcessingController extends Controller
 
         return response()->json([
 
-            'message' => 'Batch Generation Started! Process Batch In Background',
+            'message' => 'Batch Generation Started! Processing Batch In Background',
             'total_images' => count($imagePaths),
             'status' => 'processing'
         ], 202); // Accepted: Processing

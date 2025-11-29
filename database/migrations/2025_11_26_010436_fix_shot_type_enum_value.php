@@ -40,7 +40,12 @@ return new class extends Migration
                 'hero', 
                 'flat_lay', 
                 'context', 
-                'white_background'
+                'white_background',
+                 'portrait', 
+                'landscape',
+                'instagram_post',
+                'square',
+                'instagram_story'
             ])->change();
         });
     }
