@@ -1,12 +1,10 @@
-const API_BASE = "http://localhost:8000"
+const API_BASE = "http://localhost:8000";
 
 document.addEventListener("DOMContentLoaded", () => {
     const loginForm = document.getElementById("loginForm");
 
     if(loginForm) {
-
         loginForm.addEventListener("submit", async (e) => {
-
             e.preventDefault();
 
             const payload = {
@@ -14,72 +12,74 @@ document.addEventListener("DOMContentLoaded", () => {
                 password: document.getElementById("password").value
             };
             
-            const response = await fetch(`${API_BASE}/api/login`,{
+            try {
+                const response = await fetch(`${API_BASE}/api/login`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Accept": "application/json"
+                    },
+                    body: JSON.stringify(payload)
+                });
 
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
+                const data = await response.json();
 
-                body: JSON.stringify(payload)
-            });
-
-            const data = await response.json();
-
-            if(response.ok) {
-
-                alert("Login successful! 🎉");
-                // You can redirect the user or perform other actions here
-                window.location.href = "/"; // Example redirect
-            } else {
-
-                alert("Login failed: " + data.message);
-
+                if(response.ok && data.success) {
+                    // Store token if your API returns one
+                    if(data.token) {
+                        localStorage.setItem('auth_token', data.token);
+                    }
+                    
+                    alert("Login successful! 🎉");
+                    window.location.href = "/sign-in"; // Redirect to dashboard
+                } else {
+                    alert("Login failed: " + (data.message || "Invalid credentials"));
+                }
+            } catch (error) {
+                alert("Error: " + error.message);
             }
         });
     }
-})
+});
 
 document.addEventListener("DOMContentLoaded", () => {
-
     const signupForm = document.getElementById("signupForm");
 
     if(signupForm) {
-
         signupForm.addEventListener("submit", async (e) => {
-
             e.preventDefault();
 
             const payload = {
                 name: document.getElementById("name").value,
                 email: document.getElementById("email").value,
-                password: document.getElementById("password").value
+                password: document.getElementById("password").value,
             };
 
-            const response = await fetch(`${API_BASE}/api/register`,{
+            try {
+                const response = await fetch(`${API_BASE}/api/signup`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Accept": "application/json"
+                    },
+                    body: JSON.stringify(payload)
+                });
 
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
+                const data = await response.json();
 
-                body: JSON.stringify(payload)
-            });
-
-            const data = await response.json();
-
-            if(response.ok) {
-
-                alert("Sign Up successful! 🎉");
-                // You can redirect the user or perform other actions here
-                window.location.href = "/sign-up"; // Example redirect
-            } else {
-
-                alert("Sign Up Failed: " + data.message);
-
+                if(response.ok && data.success) {
+                    if(data.token) {
+                        localStorage.setItem('auth_token', data.token);
+                    }
+                    
+                    alert("Sign Up successful! 🎉");
+                    window.location.href = "/"; // Redirect to dashboard
+                } else {
+                    alert("Sign Up Failed: " + (data.message || "Please check your details"));
+                }
+            } catch (error) {
+                alert("Error: " + error.message);
             }
         });
     }
-})
-
-
+});
