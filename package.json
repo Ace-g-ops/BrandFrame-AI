@@ -12,10 +12,6 @@
     "engines": {
         "node": ">=20.19.0"
     },
-    "scripts": {
-        "build": "vite build",
-        "dev": "vite"
-    },
 
     "devDependencies": {
         "@tailwindcss/forms": "^0.5.2",
