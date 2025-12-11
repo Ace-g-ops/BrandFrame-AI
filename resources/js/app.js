@@ -7,5 +7,4 @@ window.Alpine = Alpine;
 
 Alpine.start();
 
-// force rebuild cache for tailwindcss
-
+//rebuild app
