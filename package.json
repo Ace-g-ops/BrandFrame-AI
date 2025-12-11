@@ -2,17 +2,11 @@
     "$schema": "https://www.schemastore.org/package.json",
     "private": true,
     "type": "module",
-
-   "scripts": {
-    "dev": "echo 'skipping'",
-    "build": "echo 'skipping'",
-    "production": "echo 'skipping'"
-},
-
-    "engines": {
-        "node": ">=20.19.0"
+    "scripts": {
+        "build": "vite build",
+        "dev": "vite",
+        "production": "vite build"
     },
-
     "devDependencies": {
         "@tailwindcss/forms": "^0.5.2",
         "@tailwindcss/vite": "^4.1.17",
