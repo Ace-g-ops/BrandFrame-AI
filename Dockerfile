@@ -56,54 +56,54 @@ RUN chmod 754 /usr/local/bin/start-nginx
 COPY . /var/www/html
 WORKDIR /var/www/html
 
-# 4. Setup application dependencies 
-RUN composer install --optimize-autoloader --no-dev \
-    && mkdir -p storage/logs \
-    && php artisan optimize:clear \
-    && chown -R www-data:www-data /var/www/html \
-    && echo "MAILTO=\"\"\n* * * * * www-data /usr/bin/php /var/www/html/artisan schedule:run" > /etc/cron.d/laravel \
-    && sed -i='' '/->withMiddleware(function (Middleware \$middleware) {/a\
-        \$middleware->trustProxies(at: "*");\
-    ' bootstrap/app.php; \ 
-    if [ -d .fly ]; then cp .fly/entrypoint.sh /entrypoint; chmod +x /entrypoint; fi;
+# # 4. Setup application dependencies 
+# RUN composer install --optimize-autoloader --no-dev \
+#     && mkdir -p storage/logs \
+#     && php artisan optimize:clear \
+#     && chown -R www-data:www-data /var/www/html \
+#     && echo "MAILTO=\"\"\n* * * * * www-data /usr/bin/php /var/www/html/artisan schedule:run" > /etc/cron.d/laravel \
+#     && sed -i='' '/->withMiddleware(function (Middleware \$middleware) {/a\
+#         \$middleware->trustProxies(at: "*");\
+#     ' bootstrap/app.php; \ 
+#     if [ -d .fly ]; then cp .fly/entrypoint.sh /entrypoint; chmod +x /entrypoint; fi;
 
 
 
 
-# Multi-stage build: Build static assets
-# This allows us to not include Node within the final container
-FROM node:${NODE_VERSION} as node_modules_go_brrr
+# # Multi-stage build: Build static assets
+# # This allows us to not include Node within the final container
+# FROM node:${NODE_VERSION} as node_modules_go_brrr
 
-RUN mkdir /app
+# RUN mkdir /app
 
-RUN mkdir -p  /app
-WORKDIR /app
-COPY . .
-COPY --from=base /var/www/html/vendor /app/vendor
+# RUN mkdir -p  /app
+# WORKDIR /app
+# COPY . .
+# COPY --from=base /var/www/html/vendor /app/vendor
 
-# Use yarn or npm depending on what type of
-# lock file we might find. Defaults to
-# NPM if no lock file is found.
-# Note: We run "production" for Mix and "build" for Vite
-RUN if [ -f "vite.config.js" ] || [ -f "vite.config.ts" ]; then \
-        ASSET_CMD="build"; \
-    else \
-        ASSET_CMD="production"; \
-    fi; \
-    if [ -f "yarn.lock" ]; then \
-        yarn install --frozen-lockfile; \
-        yarn $ASSET_CMD; \
-    elif [ -f "pnpm-lock.yaml" ]; then \
-        corepack enable && corepack prepare pnpm@latest-8 --activate; \
-        pnpm install --frozen-lockfile; \
-        pnpm run $ASSET_CMD; \
-    elif [ -f "package-lock.json" ]; then \
-        npm ci --no-audit; \
-        npm run $ASSET_CMD; \
-    else \
-        npm install; \
-        npm run $ASSET_CMD; \
-    fi;
+# # Use yarn or npm depending on what type of
+# # lock file we might find. Defaults to
+# # NPM if no lock file is found.
+# # Note: We run "production" for Mix and "build" for Vite
+# RUN if [ -f "vite.config.js" ] || [ -f "vite.config.ts" ]; then \
+#         ASSET_CMD="build"; \
+#     else \
+#         ASSET_CMD="production"; \
+#     fi; \
+#     if [ -f "yarn.lock" ]; then \
+#         yarn install --frozen-lockfile; \
+#         yarn $ASSET_CMD; \
+#     elif [ -f "pnpm-lock.yaml" ]; then \
+#         corepack enable && corepack prepare pnpm@latest-8 --activate; \
+#         pnpm install --frozen-lockfile; \
+#         pnpm run $ASSET_CMD; \
+#     elif [ -f "package-lock.json" ]; then \
+#         npm ci --no-audit; \
+#         npm run $ASSET_CMD; \
+#     else \
+#         npm install; \
+#         npm run $ASSET_CMD; \
+#     fi;
 
 # From our base container created above, we
 # create our final image, adding in static
