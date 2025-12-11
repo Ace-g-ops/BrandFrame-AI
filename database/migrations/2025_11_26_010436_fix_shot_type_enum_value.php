@@ -1,19 +1,23 @@
 <?php
 
 use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\DB;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
-        // Update the shot_type enum to include new values
-        Schema::table('brand_presets', function (Blueprint $table) {
-            $table->enum('shot_type', [
+        // Change column type to varchar first
+        DB::statement('ALTER TABLE brand_presets ALTER COLUMN shot_type TYPE VARCHAR(255)');
+
+        // Drop old check constraint if exists
+        DB::statement('ALTER TABLE brand_presets DROP CONSTRAINT IF EXISTS brand_presets_shot_type_check');
+
+        // Add new check constraint
+        DB::statement("
+            ALTER TABLE brand_presets
+            ADD CONSTRAINT brand_presets_shot_type_check
+            CHECK (shot_type IN (
                 'lifestyle', 
                 'hero', 
                 'flat_lay', 
@@ -24,29 +28,15 @@ return new class extends Migration
                 'instagram_post',
                 'square',
                 'instagram_story'
-            ])->change();
-        });
+            ))
+        ");
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
-        // Revert the shot_type enum to its original values
-        Schema::table('brand_presets', function (Blueprint $table) {
-            $table->enum('shot_type', [
-                'lifestyle', 
-                'hero', 
-                'flat_lay', 
-                'context', 
-                'white_background',
-                 'portrait', 
-                'landscape',
-                'instagram_post',
-                'square',
-                'instagram_story'
-            ])->change();
-        });
+        // Drop the check constraint
+        DB::statement('ALTER TABLE brand_presets DROP CONSTRAINT IF EXISTS brand_presets_shot_type_check');
+
+        DB::statement('ALTER TABLE brand_presets ALTER COLUMN shot_type TYPE VARCHAR(255)');
     }
 };
