@@ -7,13 +7,13 @@ return new class extends Migration
 {
     public function up(): void
     {
-        // Change column type to varchar first
+        // 1️⃣ Change column type to VARCHAR first
         DB::statement('ALTER TABLE brand_presets ALTER COLUMN shot_type TYPE VARCHAR(255)');
 
-        // Drop old check constraint if exists
+        // 2️⃣ Drop any existing check constraint
         DB::statement('ALTER TABLE brand_presets DROP CONSTRAINT IF EXISTS brand_presets_shot_type_check');
 
-        // Add new check constraint
+        // 3️⃣ Add new CHECK constraint for allowed enum values
         DB::statement("
             ALTER TABLE brand_presets
             ADD CONSTRAINT brand_presets_shot_type_check
@@ -34,9 +34,10 @@ return new class extends Migration
 
     public function down(): void
     {
-        // Drop the check constraint
+        // Drop the constraint
         DB::statement('ALTER TABLE brand_presets DROP CONSTRAINT IF EXISTS brand_presets_shot_type_check');
 
+        // Optionally, revert type if needed
         DB::statement('ALTER TABLE brand_presets ALTER COLUMN shot_type TYPE VARCHAR(255)');
     }
 };
