@@ -30,7 +30,7 @@
         },
 
         "files": [
-            "app/http/Helpers/PromptBuilder.php"
+            "app/Http/Helpers/PromptBuilder.php"
         ]
     },
     "autoload-dev": {
