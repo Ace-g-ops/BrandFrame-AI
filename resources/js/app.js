@@ -1,4 +1,5 @@
 import './bootstrap';
+import './auth';
 import 'flowbite';
 
 import Alpine from 'alpinejs';
