@@ -6,6 +6,7 @@ use App\Http\Helpers\PromptBuilder;
 use App\Models\GeneratedImage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 class GenerationController extends Controller
 {
@@ -67,6 +68,8 @@ class GenerationController extends Controller
             'data' => $generatedImage,
             'image_url' => $briaData['result']['image_url']
         ], 201);
+    Log::info("BRIA RESPONSE RAW: " . $response->body());
+
 
     }catch (\Exception $e){
 
@@ -96,6 +99,7 @@ public function show(Request $request, $id) {
     ->firstOrFail();
 
     return response()->json($image);
+    
 
 }
 
