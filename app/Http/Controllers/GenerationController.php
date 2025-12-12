@@ -15,7 +15,7 @@ class GenerationController extends Controller
         $validated = $request->validate([
 
             'product_image' => 'required|image|mimes:png,jpg,jpeg|max:5120',
-            'shot_type' => 'required|in:lifestyle,hero,falt_lay,context,white_background',
+            'shot_type' => 'required|in:lifestyle,hero,flat_lay,context,white_background',
             'product_description' => 'nullable|string|max:400'
         ]);
 
