@@ -44,6 +44,7 @@ class GenerationController extends Controller
             'num_results' => 1, // Number of images to generate
             'sync' => true, // Synchronous request to get immediate results
         ]);
+        Log::info("BRIA RESPONSE RAW: " . $response->body());
         
         $briaData = $response->json();
 
@@ -68,7 +69,7 @@ class GenerationController extends Controller
             'data' => $generatedImage,
             'image_url' => $briaData['result']['image_url']
         ], 201);
-    Log::info("BRIA RESPONSE RAW: " . $response->body());
+    
 
 
     }catch (\Exception $e){
